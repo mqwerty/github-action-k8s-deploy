@@ -45,7 +45,9 @@
   },
   "scripts": {
     "test": "codecept run --debug",
-    "cover": "codecept run --coverage --coverage-html",
+    "test:cover": "codecept run unit --coverage --coverage-html",
+    "test:unit": "codecept run unit --debug",
+    "test:api": "codecept run unit --debug",
     "stan": "phan --color --progress-bar",
     "cs:check": "phpcs ./src --standard=PSR12",
     "cs:fix": "phpcbf ./src --standard=PSR12",

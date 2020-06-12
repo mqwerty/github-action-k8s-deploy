@@ -4,7 +4,7 @@ namespace Helper;
 
 use Codeception\Module;
 
-class Base extends Module
+class Unit extends Module
 {
     public function _initialize(): void
     {

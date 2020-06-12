@@ -17,16 +17,9 @@ use Codeception\Actor;
  *
  * @SuppressWarnings(PHPMD)
 */
-class BaseTester extends Actor
+class ApiTester extends Actor
 {
     use _generated\BaseTesterActions;
-
-    public static function getReflectionMethod(string $class, string $method): ReflectionMethod {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $refl_method = (new ReflectionClass($class))->getMethod($method);
-        $refl_method->setAccessible(true);
-        return $refl_method;
-    }
 
     /** @noinspection PhpUnused */
     public static function linarize(string $text): string {

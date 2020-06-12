@@ -1,8 +1,8 @@
-actor: BaseTester
+actor: ApiTester
 modules:
   enabled:
     - Asserts
-    - \Helper\Base
+    - \Helper\Api
     - PhpBrowser:
         url: http://localhost:8000
     - REST:

@@ -7,7 +7,7 @@ use Codeception\Util\HttpCode;
 
 class ApiTest extends Unit
 {
-    protected BaseTester $tester;
+    protected ApiTester $tester;
 
     public function testSet(): void
     {
