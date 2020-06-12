@@ -3,7 +3,7 @@ services:
   app:
     container_name: app
     build: .
-    image: edmitry/test-github-actions
+    image: edmitry/test-github-actions:dev
     restart: always
     volumes:
       - .:/app
