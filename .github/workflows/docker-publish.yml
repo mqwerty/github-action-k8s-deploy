@@ -14,8 +14,9 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: test-github-actions
-  DOCKER_HUB: edmitry
+  # хотелось бы использовать GitHub Packages, но для публичных образов они требуют авторизацию
+  # https://github.community/t/docker-pull-from-public-github-package-registry-fail-with-no-basic-auth-credentials-error/16358
+  DOCKER_IMAGE_ID: docker.io/edmitry/test-github-actions
 
 jobs:
   # Run tests.
@@ -55,11 +56,6 @@ jobs:
 
       - name: Push image
         run: |
-          IMAGE_ID=$DOCKER_HUB/$IMAGE_NAME
-
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
