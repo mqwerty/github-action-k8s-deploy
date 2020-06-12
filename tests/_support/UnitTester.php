@@ -19,7 +19,7 @@ use Codeception\Actor;
 */
 class UnitTester extends Actor
 {
-    use _generated\BaseTesterActions;
+    use _generated\UnitTesterActions;
 
     public static function getReflectionMethod(string $class, string $method): ReflectionMethod {
         /** @noinspection PhpUnhandledExceptionInspection */

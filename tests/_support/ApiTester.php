@@ -19,7 +19,7 @@ use Codeception\Actor;
 */
 class ApiTester extends Actor
 {
-    use _generated\BaseTesterActions;
+    use _generated\ApiTesterActions;
 
     /** @noinspection PhpUnused */
     public static function linarize(string $text): string {
