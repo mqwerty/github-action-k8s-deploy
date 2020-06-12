@@ -26,6 +26,7 @@ kubectl apply -f kube.yml
 Проверяем что все развернулось:
 ```bash
 kubectl get deployments
+kubectl get pod
 doctl compute load-balancer list
 curl {load-balancer-ip}
 # {"result":"test"}
@@ -59,5 +60,5 @@ kubectl delete -f kube.yml
 
 Возвращаем обратно контекст kubectl:
 ```bash
-kubectl set-context docker-desktop
+kubectl config set-context docker-desktop
 ```
