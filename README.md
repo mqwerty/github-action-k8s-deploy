@@ -1,6 +1,6 @@
 ![Docker](https://github.com/mqwerty/test-github-actions/workflows/Docker/badge.svg)
 
-# Деплой: GitHub Actions + DockerHub + DigitalOcean + Kubernetes
+# GitHub Actions + DockerHub + DigitalOcean + Kubernetes
 
 ## Подготовка и развертывание вручную
 
