@@ -4,7 +4,12 @@ kind: ConfigMap
 metadata:
   name: config
 data:
-  config.php: "<?php return ['env' => 'prod'];"
+  config.php: |
+    <?php
+    return [
+      'env' => 'prod',
+      'appEnv' => 'prod',
+    ];
 ---
 apiVersion: v1
 kind: Service
