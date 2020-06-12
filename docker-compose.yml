@@ -16,7 +16,6 @@ services:
       - PHAN_DISABLE_XDEBUG_WARN=1
       - PHAN_ALLOW_XDEBUG=0
       - PHP_IDE_CONFIG=serverName=app
-    command: ["-d"]
     healthcheck:
       test: ["CMD", "curl", "-fI", "localhost:2113"]
       interval: 1s

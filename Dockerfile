@@ -34,5 +34,5 @@ RUN find /app -type d -print0 | xargs -t -0 -P 4 chmod 0755 > /dev/null 2>&1 \
 
 EXPOSE 8000 2113 6001
 COPY ./docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD []
+ENTRYPOINT ["sh", "-c", "docker-entrypoint.sh"]
+CMD ["-d"]
