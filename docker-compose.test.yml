@@ -3,7 +3,7 @@ services:
   sut:
     build: .
     entrypoint: []
-    command: sh -c "cp config.example.php config.php && composer install && composer test:unit && composer stan && composer cs:check"
+    command: sh -c "cp config.example.php config.php && composer install --no-progress --no-suggest && composer test:unit && composer stan && composer cs:check"
     healthcheck:
       test: ["CMD", "curl", "-fI", "localhost:2113"]
       interval: 1s
