@@ -15,9 +15,6 @@ class ServiceManager implements ContainerInterface
 
     public function __construct(array $config = [])
     {
-        $file = __DIR__ . '/../../config.php';
-        /** @noinspection PhpIncludeInspection */
-        $config2 = file_exists($file) ? require $file : [];
         $this->config = array_merge(
             [
                 'env' => 'prod', // prod | dev
@@ -29,7 +26,7 @@ class ServiceManager implements ContainerInterface
                         ->pushHandler(new \Monolog\Handler\StreamHandler(STDERR));
                 },
             ],
-            $config2,
+            require __DIR__ . '/../../config.php',
             $config
         );
         $this->container = array_flip($this->config['shared']);

@@ -6,5 +6,5 @@
  */
 
 return [
-    'appEnv' => 'prod', // prod | dev
+    'env' => 'prod', // prod | dev
 ];

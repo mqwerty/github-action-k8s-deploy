@@ -44,7 +44,7 @@ final class App
 
     public static function getEnv(): string
     {
-        return self::get('appEnv') ?: 'prod';
+        return self::get('env') ?: 'prod';
     }
 
     /** @noinspection PhpFullyQualifiedNameUsageInspection PhpUnhandledExceptionInspection */
