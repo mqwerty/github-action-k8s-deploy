@@ -8,7 +8,6 @@ data:
     <?php
     return [
       'env' => 'prod',
-      'appEnv' => 'prod',
     ];
 ---
 apiVersion: v1
