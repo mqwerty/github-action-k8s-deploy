@@ -19,7 +19,7 @@ env:
   IMAGE_ID: docker.io/edmitry/test-github-actions
 
 jobs:
-  # Run tests.
+  # Run tests
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
@@ -32,10 +32,9 @@ jobs:
           docker-compose --file docker-compose.test.yml build
           docker-compose --file docker-compose.test.yml run test
 
-  # Push image to GitHub Packages.
+  # Push image to GitHub Packages
   # See also https://docs.docker.com/docker-hub/builds/
   push:
-    # Ensure test job passes before pushing image.
     needs: test
 
     runs-on: ubuntu-latest
@@ -66,3 +65,18 @@ jobs:
 
           docker tag $IMAGE_ID $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+
+  # Deploy to Kubernetes on Digital Ocean
+  deploy:
+    needs: push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: digitalocean/action-doctl@v2.0.0
+        with:
+          token: ${{ secrets.DO_KUBE_GHA_TOKEN }}
+
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save kube
+
+      - name: Run rollout
+        run: kubectl rollout restart deployment app
