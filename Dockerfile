@@ -25,7 +25,7 @@ RUN echo 'alias c="composer"' >> /home/app/.profile \
     && echo 'alias l="ls -lah"' >> /home/app/.profile
 
 COPY ./composer.* ./
-RUN composer install --no-cache --no-dev --no-progress --no-suggest \
+RUN composer install --no-cache --no-dev --no-interaction --no-progress --no-suggest \
     && mkdir /home/app/bin && /app/vendor/bin/rr get-binary -l /home/app/bin
 
 COPY --chown=app:app . .
