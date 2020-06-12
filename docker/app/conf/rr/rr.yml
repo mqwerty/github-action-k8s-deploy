@@ -39,5 +39,3 @@ limit:
       TTL: 0
       idleTTL: 0
       execTTL: 60
-    jobs:
-      maxMemory: 100

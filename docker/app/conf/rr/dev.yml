@@ -41,16 +41,11 @@ limit:
       TTL: 0
       idleTTL: 0
       execTTL: 60
-    jobs:
-      maxMemory: 100
 
 reload:
   interval: 1s
   patterns: [".php"]
   services:
     http:
-      recursive: true
-      dirs: ["/app"]
-    jobs:
       recursive: true
       dirs: ["/app"]
