@@ -32,7 +32,7 @@ spec:
   selector:
     matchLabels:
       app: app
-  replicas: 2
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
