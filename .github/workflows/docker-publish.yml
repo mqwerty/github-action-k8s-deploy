@@ -16,7 +16,7 @@ on:
 env:
   # хотелось бы использовать GitHub Packages, но для публичных образов они требуют авторизацию
   # https://github.community/t/docker-pull-from-public-github-package-registry-fail-with-no-basic-auth-credentials-error/16358
-  DOCKER_IMAGE_ID: docker.io/edmitry/test-github-actions
+  IMAGE_ID: docker.io/edmitry/test-github-actions
 
 jobs:
   # Run tests.
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag $DOCKER_IMAGE_ID
+        run: docker build . --file Dockerfile --tag $IMAGE_ID
 
       - name: Log into registry
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login --username edmitry --password-stdin
@@ -68,5 +68,5 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
-          docker tag $DOCKER_IMAGE_ID $DOCKER_IMAGE_ID:$VERSION
+          docker tag $IMAGE_ID $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
