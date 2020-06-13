@@ -77,18 +77,6 @@ final class Router
         return App::get(\App\Action\Index::class)(self::parse($request));
     }
 
-//    public static function dispatch(ServerRequestInterface $request): ResponseInterface
-//    {
-//        if ('POST' !== $request->getMethod()) {
-//            throw new HttpException(405);
-//        }
-//        $action = self::getAction($request);
-//        if (!class_exists($action)) {
-//            throw new HttpException(404);
-//        }
-//        return App::get($action)(self::parse($request));
-//    }
-
     public static function getAction(ServerRequestInterface $request): string
     {
         // /task/set -> \App\Action\TaskSet
