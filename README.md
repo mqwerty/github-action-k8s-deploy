@@ -1,4 +1,6 @@
-![Docker](https://github.com/mqwerty/test-github-actions/workflows/Docker/badge.svg)
+![CD](https://github.com/mqwerty/test-github-actions/workflows/CD/badge.svg?branch=master)
+![Docker Image Size (latest)](https://img.shields.io/docker/image-size/edmitry/test-github-actions/latest)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mqwerty_test-github-actions&metric=alert_status)](https://sonarcloud.io/dashboard?id=mqwerty_test-github-actions)
 
 # GitHub Actions + DockerHub + DigitalOcean + Kubernetes
 
