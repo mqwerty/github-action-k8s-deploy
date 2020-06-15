@@ -1,17 +1,17 @@
 <?php
 
-/** @noinspection PhpFullyQualifiedNameUsageInspection */
-
 namespace App\Service;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
-class ServiceManager implements ContainerInterface
+final class ServiceManager implements ContainerInterface
 {
-    protected array $config = [];
-    protected array $container = [];
+    private array $config;
+    private array $container = [];
 
     public function __construct(array $config = [])
     {
@@ -22,19 +22,28 @@ class ServiceManager implements ContainerInterface
                     LoggerInterface::class,
                 ],
                 LoggerInterface::class => static function () {
-                    return (new \Monolog\Logger('app'))
-                        ->pushHandler(new \Monolog\Handler\StreamHandler(STDERR));
+                    return (new Logger('app'))->pushHandler(new StreamHandler(STDERR));
                 },
             ],
             require __DIR__ . '/../../config.php',
             $config
         );
-        $this->container = array_flip($this->config['shared']);
-        foreach ($this->container as $key => $value) {
-            $this->container[$key] = null;
+        /** @phan-suppress-next-line PhanTypeNoPropertiesForeach */
+        foreach ($this->config['shared'] as $value) {
+            $this->container[$value] = null;
         }
     }
 
+    public function has($id): bool
+    {
+        return array_key_exists($id, $this->config) || class_exists($id);
+    }
+
+    /**
+     * @param string $id
+     * @return mixed
+     * @throws \App\Service\ServiceNotFoundException
+     */
     public function get($id)
     {
         if (array_key_exists($id, $this->config)) {
@@ -52,32 +61,38 @@ class ServiceManager implements ContainerInterface
         }
 
         if (class_exists($id)) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            $class = new ReflectionClass($id);
-            $args = [];
-            if ($constructor = $class->getConstructor()) {
-                $params = $constructor->getParameters();
-                foreach ($params as $param) {
-                    if ($param->isOptional()) {
-                        /** @noinspection PhpUnhandledExceptionInspection */
-                        $args[] = $param->getDefaultValue();
-                    } else {
-                        $paramClass = $param->getClass();
-                        if (!$paramClass) {
-                            throw new ServiceNotFoundException("Can't resolve param '{$param->getName()}' for $id");
-                        }
-                        $args[] = $this->get($paramClass->getName());
-                    }
-                }
-            }
-            return $class->newInstanceArgs($args);
+            return $this->autowire($id);
         }
 
         throw new ServiceNotFoundException("$id not found");
     }
 
-    public function has($id): bool
+    /**
+     * @param string $id
+     * @return mixed
+     * @throws \App\Service\ServiceNotFoundException
+     */
+    private function autowire($id)
     {
-        return array_key_exists($id, $this->config) || class_exists($id);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $class = new ReflectionClass($id);
+        $constructor = $class->getConstructor();
+        $args = [];
+        if ($constructor) {
+            $params = $constructor->getParameters();
+            foreach ($params as $param) {
+                if ($param->isOptional()) {
+                    /** @noinspection PhpUnhandledExceptionInspection */
+                    $args[] = $param->getDefaultValue();
+                } else {
+                    $paramClass = $param->getClass();
+                    if (!$paramClass) {
+                        throw new ServiceNotFoundException("Can't resolve param '{$param->getName()}' for $id");
+                    }
+                    $args[] = $this->get($paramClass->getName());
+                }
+            }
+        }
+        return $class->newInstanceArgs($args);
     }
 }

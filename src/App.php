@@ -32,22 +32,22 @@ final class App
         }
     }
 
-    public static function get(string $id)
-    {
-        return self::$serviceManager->get($id);
-    }
-
     public static function has(string $id): bool
     {
         return self::$serviceManager->has($id);
     }
 
-    public static function getEnv(): string
+    public static function get(string $id)
     {
-        return self::get('env') ?: 'prod';
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::$serviceManager->get($id);
     }
 
-    /** @noinspection PhpFullyQualifiedNameUsageInspection PhpUnhandledExceptionInspection */
+    /**
+     * @noinspection PhpFullyQualifiedNameUsageInspection
+     * @SuppressWarnings(PHPMD.MissingImport)
+     * @param mixed $val
+     */
     public static function dump($val): void
     {
         if (class_exists(\Spiral\Debug\Dumper::class)) {

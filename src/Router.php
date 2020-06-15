@@ -3,8 +3,7 @@
 namespace App;
 
 use App\Exception\HttpException;
-use InvalidArgumentException;
-use JsonException;
+use App\Action;
 use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,18 +18,11 @@ final class Router
     {
         $worker = new Worker(new StreamRelay(STDIN, STDOUT));
         $psr7 = new PSR7Client($worker);
-
         try {
-            $env = App::getEnv();
-        } catch (Throwable $e) {
-            $psr7->getWorker()->error((string) $e);
-            return;
-        }
-
-        try {
+            $env = App::get('env');
             while ($request = $psr7->acceptRequest()) {
                 // jit debug, no autostart, see xdebug.ini
-                if (isset($xdebug_session)) {
+                if (isset($xdebugSession)) {
                     $psr7->getWorker()->stop();
                     return;
                 }
@@ -45,25 +37,10 @@ final class Router
                 ) {
                     /** @noinspection ForgottenDebugOutputInspection PhpComposerExtensionStubsInspection */
                     xdebug_break();
-                    $xdebug_session = true;
+                    $xdebugSession = true;
                 }
                 // handle request
-                try {
-                    $response = self::dispatch($request);
-                } catch (HttpException $e) {
-                    /** @noinspection ForgottenDebugOutputInspection */
-                    error_log((string) $e);
-                    $response = 'prod' === $env
-                        ? new Response\JsonResponse(['error' => $e->getMessage()], $e->getCode())
-                        : self::exToResponce($e);
-                } catch (Throwable $e) {
-                    /** @noinspection ForgottenDebugOutputInspection */
-                    error_log((string) $e);
-                    $response = 'prod' === $env
-                        ? new Response\EmptyResponse(500)
-                        : self::exToResponce($e);
-                }
-                $psr7->respond($response);
+                self::handleRequest($env, $psr7, $request);
             }
         } catch (Throwable $e) {
             $psr7->getWorker()->error((string) $e);
@@ -71,10 +48,29 @@ final class Router
         }
     }
 
+    private static function handleRequest(string $env, PSR7Client $psr7, ServerRequestInterface $request): void
+    {
+        try {
+            $response = self::dispatch($request);
+        } catch (HttpException $e) {
+            /** @noinspection ForgottenDebugOutputInspection */
+            error_log((string) $e);
+            $response = 'prod' === $env
+                ? new Response\JsonResponse(['error' => $e->getMessage()], $e->getCode())
+                : self::exToResponce($e);
+        } catch (Throwable $e) {
+            /** @noinspection ForgottenDebugOutputInspection */
+            error_log((string) $e);
+            $response = 'prod' === $env
+                ? new Response\EmptyResponse(500)
+                : self::exToResponce($e);
+        }
+        $psr7->respond($response);
+    }
+
     public static function dispatch(ServerRequestInterface $request): ResponseInterface
     {
-        /** @noinspection PhpFullyQualifiedNameUsageInspection */
-        return App::get(\App\Action\Index::class)(self::parse($request));
+        return App::get(Action\Index::class)(self::parse($request));
     }
 
     public static function getAction(ServerRequestInterface $request): string
@@ -89,7 +85,7 @@ final class Router
             try {
                 $json = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
                 $request = $request->withParsedBody($json);
-            } catch (JsonException | InvalidArgumentException $e) {
+            } catch (Throwable $e) {
                 throw new HttpException(400, 'Parcing body error', $e);
             }
         }
@@ -113,7 +109,7 @@ final class Router
     public static function exToResponce(Throwable $e): Response
     {
         return new Response\JsonResponse(
-            static::exToArray($e),
+            self::exToArray($e),
             get_class($e) === HttpException::class ? $e->getCode() : 500,
             [],
             JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
