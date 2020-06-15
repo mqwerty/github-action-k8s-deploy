@@ -3,13 +3,13 @@
 namespace Dev;
 
 use Whoops\Handler\PlainTextHandler;
-use Whoops\Run as ErrorRunner;
+use Whoops\Run;
 
 class ErrorHandler
 {
     public static function register(): void
     {
-        (new ErrorRunner())
+        (new Run())
             ->pushHandler(
                 new PlainTextHandler()
             )
