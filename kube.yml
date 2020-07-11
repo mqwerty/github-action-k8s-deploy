@@ -44,7 +44,7 @@ spec:
         app: app
     spec:
       containers:
-        - image: edmitry/test-github-actions
+        - image: edmitry/github-action-k8s-deploy
           name: app
           volumeMounts:
             - name: config

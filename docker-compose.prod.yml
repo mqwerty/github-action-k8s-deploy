@@ -2,7 +2,7 @@ version: '3'
 services:
   app:
     container_name: app
-    image: edmitry/test-github-actions
+    image: edmitry/github-action-k8s-deploy
     restart: always
     ports:
       - 80:8000

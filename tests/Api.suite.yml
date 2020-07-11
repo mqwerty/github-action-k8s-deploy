@@ -2,7 +2,6 @@ actor: ApiTester
 modules:
   enabled:
     - Asserts
-    - \Helper\Api
     - PhpBrowser:
         url: http://localhost:8000
     - REST:

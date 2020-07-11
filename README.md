@@ -1,6 +1,6 @@
-![CD](https://github.com/mqwerty/test-github-actions/workflows/CD/badge.svg?branch=master)
-![Docker Image Size (latest)](https://img.shields.io/docker/image-size/edmitry/test-github-actions/latest)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mqwerty_test-github-actions&metric=alert_status)](https://sonarcloud.io/dashboard?id=mqwerty_test-github-actions)
+![CD](https://github.com/mqwerty/github-action-k8s-deploy/workflows/CD/badge.svg?branch=master)
+![Docker Image Size (latest)](https://img.shields.io/docker/image-size/edmitry/github-action-k8s-deploy/latest)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mqwerty_github-action-k8s-deploy&metric=alert_status)](https://sonarcloud.io/dashboard?id=mqwerty_github-action-k8s-deploy)
 
 # GitHub Actions + DockerHub + DigitalOcean + Kubernetes
 
@@ -15,9 +15,9 @@ doctl kube cluster create kube --set-current-context --region fra1 --node-pool "
 
 Собираем докер образ и пушим его в DockerHub:
 ```bash
-docker build . --file Dockerfile --tag edmitry/test-github-actions
-docker tag edmitry/test-github-actions edmitry/test-github-actions:latest
-docker push edmitry/test-github-actions:latest
+docker build . --file Dockerfile --tag edmitry/github-action-k8s-deploy
+docker tag edmitry/github-action-k8s-deploy edmitry/github-action-k8s-deploy:latest
+docker push edmitry/github-action-k8s-deploy:latest
 ```
 
 Разворачиваем приложение:
@@ -38,7 +38,7 @@ curl {load-balancer-ip}
 ```bash
 kubectl get pod
 kubectl describe pod {name}
-# Image ID: docker-pullable://edmitry/test-github-actions@sha256:5d0ba35bdd128eea01fbfdee60b0d4f91ccd97a43ff303f3d8cf99b1ce9638c8
+# Image ID: docker-pullable://edmitry/github-action-k8s-deploy@sha256:5d0ba35bdd128eea01fbfdee60b0d4f91ccd97a43ff303f3d8cf99b1ce9638c8
 ```
 
 ## CI/CD

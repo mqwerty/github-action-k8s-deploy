@@ -20,9 +20,4 @@ use Codeception\Actor;
 class ApiTester extends Actor
 {
     use _generated\ApiTesterActions;
-
-    /** @noinspection PhpUnused */
-    public static function linarize(string $text): string {
-        return trim(preg_replace('/\s+/', ' ', $text));
-    }
 }

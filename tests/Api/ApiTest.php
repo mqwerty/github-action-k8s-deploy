@@ -1,7 +1,10 @@
 <?php
 
-/** @noinspection PhpIllegalPsrClassPathInspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
 
+namespace Api;
+
+use ApiTester;
 use Codeception\Test\Unit;
 use Codeception\Util\HttpCode;
 
@@ -14,5 +17,6 @@ class ApiTest extends Unit
         $this->tester->sendGet('/');
         $this->tester->seeResponseCodeIs(HttpCode::OK);
         $this->tester->seeResponseIsJson();
+        $this->tester->seeResponseContains('{"result":"test"}');
     }
 }

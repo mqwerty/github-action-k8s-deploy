@@ -1,5 +1,5 @@
 {
-  "name": "mqwerty/test-github-actions",
+  "name": "mqwerty/github-action-k8s-deploy",
   "type": "project",
   "license": "MIT",
   "description": "",
@@ -18,18 +18,12 @@
       "App\\": "src"
     }
   },
-  "autoload-dev": {
-    "psr-4": {
-      "Dev\\": "src-dev"
-    }
-  },
   "require": {
     "php": "^7.4",
     "ext-json": "*",
-    "ext-mbstring": "*",
-    "ext-zend-opcache": "*",
     "laminas/laminas-diactoros": "^2.3",
     "monolog/monolog": "^2.1",
+    "mqwerty/dependency-injection": "^1.1",
     "spiral/roadrunner": "^1.8"
   },
   "require-dev": {
@@ -37,7 +31,6 @@
     "codeception/module-asserts": "^1.2",
     "codeception/module-phpbrowser": "^1.0",
     "codeception/module-rest": "^1.2",
-    "filp/whoops": "^2.7",
     "phan/phan": "^3.0",
     "phpmd/phpmd": "^2.8",
     "roave/security-advisories": "dev-master",
@@ -46,14 +39,20 @@
   },
   "scripts": {
     "test": "codecept run --debug",
-    "test:cover": "codecept run unit --coverage --coverage-html",
-    "test:unit": "codecept run unit --debug",
-    "test:api": "codecept run unit --debug",
+    "test:cover": "codecept run Unit --coverage --coverage-text",
+    "test:unit": "codecept run Unit --debug",
+    "test:api": "codecept run Api --debug",
     "stan:md": "phpmd ./src ansi ./phpmd.xml",
     "stan:phan": "phan --color --progress-bar",
     "cs:check": "phpcs ./src --standard=PSR12",
     "cs:fix": "phpcbf ./src --standard=PSR12",
     "rr:reset": "/home/app/bin/rr -c /usr/local/etc/roadrunner/rr.yml http:reset",
-    "rr:workers": "/home/app/bin/rr -c /usr/local/etc/roadrunner/rr.yml http:workers"
+    "rr:workers": "/home/app/bin/rr -c /usr/local/etc/roadrunner/rr.yml http:workers",
+    "check": [
+      "@cs:check",
+      "@stan:md",
+      "@stan:phan",
+      "@test"
+    ]
   }
 }

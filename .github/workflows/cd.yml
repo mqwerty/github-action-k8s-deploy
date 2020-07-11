@@ -16,7 +16,7 @@ on:
 env:
   # хотелось бы использовать GitHub Packages, но для публичных образов они требуют авторизацию
   # https://github.community/t/docker-pull-from-public-github-package-registry-fail-with-no-basic-auth-credentials-error/16358
-  IMAGE_ID: docker.io/edmitry/test-github-actions
+  IMAGE_ID: docker.io/edmitry/github-action-k8s-deploy
 
 jobs:
 
@@ -62,6 +62,7 @@ jobs:
   deploy:
     needs: push
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master{RemoveThisToUnlockAction}'
     steps:
       - uses: digitalocean/action-doctl@v2.0.0
         with:

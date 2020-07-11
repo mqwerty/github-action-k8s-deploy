@@ -2,45 +2,29 @@
 
 namespace App;
 
+use Mqwerty\DI\Container;
 use Psr\Container\ContainerInterface;
-use App\Service\ServiceManager;
 
 final class App
 {
-    private static ContainerInterface $serviceManager;
+    private ContainerInterface $container;
 
     /**
-     * @noinspection PhpFullyQualifiedNameUsageInspection
-     * @suppress PhanUndeclaredClassReference
-     * @suppress PhanUndeclaredClassMethod
+     * @suppress PhanMissingRequireFile
      * @param array $config
      */
     public function __construct(array $config = [])
     {
-        // In dev enviroment convert php errors to exceptions (including notice)
-        // In prod enviroment see `docker logs`
-        if (class_exists(\Dev\ErrorHandler::class)) {
-            \Dev\ErrorHandler::register();
-        }
-        self::$serviceManager = new ServiceManager($config);
+        $configLocal = file_exists('./config.php') ? require './config.php' : [];
+        $config = array_merge($configLocal, $config);
+        $this->container = new Container($config);
     }
 
     public function run(): void
     {
         if (getenv('RR_HTTP') === 'true') {
-            Router::handle();
+            (new Router($this->container))->handle();
         }
-    }
-
-    public static function has(string $id): bool
-    {
-        return self::$serviceManager->has($id);
-    }
-
-    public static function get(string $id)
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return self::$serviceManager->get($id);
     }
 
     /**

@@ -2,9 +2,10 @@
 
 namespace App;
 
-use App\Exception\HttpException;
 use App\Action;
+use App\Exception\HttpException;
 use Laminas\Diactoros\Response;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spiral\Goridge\StreamRelay;
@@ -14,20 +15,28 @@ use Throwable;
 
 final class Router
 {
-    public static function handle(): void
+    private ContainerInterface $container;
+    private PSR7Client $client;
+    private string $env;
+
+    public function __construct(ContainerInterface $container)
     {
-        $worker = new Worker(new StreamRelay(STDIN, STDOUT));
-        $psr7 = new PSR7Client($worker);
+        $this->container = $container;
+        $this->env = $this->container->get('env');
+        $this->client = new PSR7Client(new Worker(new StreamRelay(STDIN, STDOUT)));
+    }
+
+    public function handle(): void
+    {
         try {
-            $env = App::get('env');
-            while ($request = $psr7->acceptRequest()) {
+            while ($request = $this->client->acceptRequest()) {
                 // jit debug, no autostart, see xdebug.ini
                 if (isset($xdebugSession)) {
-                    $psr7->getWorker()->stop();
+                    $this->client->getWorker()->stop();
                     return;
                 }
                 if (
-                    'prod' !== $env
+                    'prod' !== $this->env
                     && (
                         array_key_exists('XDEBUG_SESSION', $request->getCookieParams())
                         || array_key_exists('XDEBUG_SESSION', $request->getAttributes())
@@ -40,46 +49,39 @@ final class Router
                     $xdebugSession = true;
                 }
                 // handle request
-                self::handleRequest($env, $psr7, $request);
+                $this->handleRequest($this->client, $request);
             }
         } catch (Throwable $e) {
-            $psr7->getWorker()->error((string) $e);
+            $this->client->getWorker()->error((string) $e);
             return;
         }
     }
 
-    private static function handleRequest(string $env, PSR7Client $psr7, ServerRequestInterface $request): void
+    /** @noinspection ForgottenDebugOutputInspection */
+    private function handleRequest(PSR7Client $psr7, ServerRequestInterface $request): void
     {
         try {
-            $response = self::dispatch($request);
+            $response = $this->dispatch($request);
         } catch (HttpException $e) {
-            /** @noinspection ForgottenDebugOutputInspection */
             error_log((string) $e);
-            $response = 'prod' === $env
+            $response = 'prod' === $this->env
                 ? new Response\JsonResponse(['error' => $e->getMessage()], $e->getCode())
                 : self::exToResponce($e);
         } catch (Throwable $e) {
-            /** @noinspection ForgottenDebugOutputInspection */
             error_log((string) $e);
-            $response = 'prod' === $env
+            $response = 'prod' === $this->env
                 ? new Response\EmptyResponse(500)
                 : self::exToResponce($e);
         }
         $psr7->respond($response);
     }
 
-    public static function dispatch(ServerRequestInterface $request): ResponseInterface
+    private function dispatch(ServerRequestInterface $request): ResponseInterface
     {
-        return App::get(Action\Index::class)(self::parse($request));
+        return $this->container->get(Action\Index::class)($this->parse($request));
     }
 
-    public static function getAction(ServerRequestInterface $request): string
-    {
-        // /task/set -> \App\Action\TaskSet
-        return '\\App\\Action\\' . str_replace('/', '', ucwords($request->getUri()->getPath(), '/'));
-    }
-
-    public static function parse(ServerRequestInterface $request): ServerRequestInterface
+    private function parse(ServerRequestInterface $request): ServerRequestInterface
     {
         if ($request->getBody()->getSize()) {
             try {
@@ -92,7 +94,7 @@ final class Router
         return $request;
     }
 
-    public static function exToArray(Throwable $e): array
+    private static function exToArray(Throwable $e): array
     {
         return [
             'error' => [
@@ -106,7 +108,7 @@ final class Router
         ];
     }
 
-    public static function exToResponce(Throwable $e): Response
+    private static function exToResponce(Throwable $e): Response
     {
         return new Response\JsonResponse(
             self::exToArray($e),

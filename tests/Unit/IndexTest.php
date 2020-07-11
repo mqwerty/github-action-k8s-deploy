@@ -1,12 +1,13 @@
 <?php
 
-/** @noinspection PhpIllegalPsrClassPathInspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUnhandledExceptionInspection */
+
+namespace Unit;
 
 use App\Action\Index;
-use App\App;
 use Codeception\Test\Unit;
 use Laminas\Diactoros\ServerRequest;
-use Psr\Http\Message\ResponseInterface;
+use UnitTester;
 
 class IndexTest extends Unit
 {
@@ -14,9 +15,8 @@ class IndexTest extends Unit
 
     public function testIndex(): void
     {
-        new App();
         $action = new Index();
         $result = $action(new ServerRequest());
-        static::assertInstanceOf(ResponseInterface::class, $result);
+        static::assertEquals(200, $result->getStatusCode());
     }
 }
