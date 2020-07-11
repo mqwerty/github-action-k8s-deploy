@@ -6,8 +6,9 @@
 
 ## Подготовка и развертывание вручную
 
-Создаем кластер Kubernetes в DigitalOcean.  
 Требуется установить [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) и [doctl](https://github.com/digitalocean/doctl).  
+
+Создаем кластер Kubernetes в DigitalOcean.  
 Кластер с именем `kube`, состоит из `1` виртуалки размера `S` в регионе `fra1`.
 ```bash
 doctl kube cluster create kube --set-current-context --region fra1 --node-pool "name=kube-test;size=s-2vcpu-2gb;count=1"
