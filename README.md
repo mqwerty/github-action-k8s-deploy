@@ -1,5 +1,5 @@
-![CD](https://github.com/mqwerty/github-action-k8s-deploy/workflows/CD/badge.svg?branch=master)
-![Docker Image Size (latest)](https://img.shields.io/docker/image-size/edmitry/github-action-k8s-deploy/latest)
+[![CD](https://github.com/mqwerty/github-action-k8s-deploy/workflows/CD/badge.svg?branch=master)](https://github.com/mqwerty/github-action-k8s-deploy/actions?query=workflow%3ACD)
+[![Docker Image Size (latest)](https://img.shields.io/docker/image-size/edmitry/github-action-k8s-deploy/latest)](https://hub.docker.com/repository/docker/edmitry/github-action-k8s-deploy)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mqwerty_github-action-k8s-deploy&metric=alert_status)](https://sonarcloud.io/dashboard?id=mqwerty_github-action-k8s-deploy)
 
 # GitHub Actions + DockerHub + DigitalOcean + Kubernetes
