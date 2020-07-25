@@ -251,16 +251,16 @@
         },
         {
             "name": "mqwerty/dependency-injection",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mqwerty/dependency-injection.git",
-                "reference": "14ee922b63c36cf8772c2b335c93c8eccd184bc9"
+                "reference": "1391be1193c41fd6a00c07750ade6f4504ad9b17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mqwerty/dependency-injection/zipball/14ee922b63c36cf8772c2b335c93c8eccd184bc9",
-                "reference": "14ee922b63c36cf8772c2b335c93c8eccd184bc9",
+                "url": "https://api.github.com/repos/mqwerty/dependency-injection/zipball/1391be1193c41fd6a00c07750ade6f4504ad9b17",
+                "reference": "1391be1193c41fd6a00c07750ade6f4504ad9b17",
                 "shasum": ""
             },
             "require": {
@@ -299,7 +299,7 @@
                 "ioc",
                 "psr11"
             ],
-            "time": "2020-07-06T11:16:32+00:00"
+            "time": "2020-07-24T09:23:50+00:00"
         },
         {
             "name": "psr/container",
