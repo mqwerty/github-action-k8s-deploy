@@ -3,11 +3,10 @@
 namespace App;
 
 use Mqwerty\DI\Container;
-use Psr\Container\ContainerInterface;
 
 final class App
 {
-    private ContainerInterface $container;
+    private Container $container;
 
     /**
      * @suppress PhanMissingRequireFile
